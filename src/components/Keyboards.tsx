@@ -1,50 +1,60 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import Key from './key';
-import { useAppContext } from '../context/AppContext';
+import React from "react";
+import { View, Text, Pressable } from "react-native";
+import { keys, ENTER, CLEAR, colors } from "../constants";
+import styles, { keyWidth } from "./keyboardStyle";
 
-const KeyboardComponent = () => {
-  const { onSelectLetter, onDelete, onEnter, disabledLetters, gameOver } = useAppContext();
+interface Props {
+  onKeyPressed?: (key: string) => void;
+  greenCaps?: string[];
+  yellowCaps?: string[];
+  greyCaps?: string[];
+}
 
-  const keys1 = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"];
-  const keys2 = ["A", "S", "D", "F", "G", "H", "J", "K", "L"];
-  const keys3 = ["Z", "X", "C", "V", "B", "N", "M"];
+const Keyboard: React.FC<Props> = ({
+  onKeyPressed = () => {},
+  greenCaps = [],
+  yellowCaps = [],
+  greyCaps = [],
+}) => {
+  const isLongButton = (key: string): boolean => {
+    return key === ENTER || key === CLEAR;
+  };
+
+  const getKeyBGColor = (key: string): string => {
+    if (greenCaps.includes(key)) {
+      return colors.primary;
+    }
+    if (yellowCaps.includes(key)) {
+      return colors.secondary;
+    }
+    if (greyCaps.includes(key)) {
+      return colors.darkgrey;
+    }
+    return colors.grey;
+  };
 
   return (
     <View style={styles.keyboard}>
-      <View style={styles.line}>
-        {keys1.map((key) => (
-          <Key key={key} keyVal={key} onPress={() => onSelectLetter(key)} disabled={disabledLetters && disabledLetters.includes(key) || gameOver.gameOver} />
-        ))}
-      </View>
-      <View style={styles.line}>
-        {keys2.map((key) => (
-          <Key key={key} keyVal={key} onPress={() => onSelectLetter(key)} disabled={disabledLetters && disabledLetters.includes(key) || gameOver.gameOver} />
-        ))}
-      </View>
-      <View style={styles.line}>
-        <Key keyVal={"ENTER"} bigKey onPress={onEnter} disabled={gameOver.gameOver} />
-        {keys3.map((key) => (
-          <Key key={key} keyVal={key} onPress={() => onSelectLetter(key)} disabled={disabledLetters && disabledLetters.includes(key) || gameOver.gameOver} />
-        ))}
-        <Key keyVal={"DELETE"} bigKey onPress={onDelete} disabled={gameOver.gameOver} />
-      </View>
+      {keys.map((keyRow, i) => (
+        <View style={styles.row} key={`row-${i}`}>
+          {keyRow.map((key) => (
+            <Pressable
+              onPress={() => onKeyPressed(key)}
+              disabled={greyCaps.includes(key)}
+              key={key}
+              style={[
+                styles.key,
+                isLongButton(key) ? { width: keyWidth * 1.4 } : {},
+                { backgroundColor: getKeyBGColor(key) },
+              ]}
+            >
+              <Text style={styles.keyText}>{key.toUpperCase()}</Text>
+            </Pressable>
+          ))}
+        </View>
+      ))}
     </View>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  keyboard: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 20,
-  },
-  line: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
-
-export default KeyboardComponent;
+export default Keyboard;

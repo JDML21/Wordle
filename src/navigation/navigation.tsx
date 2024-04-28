@@ -1,23 +1,40 @@
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
+import { StyleSheet, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import GameScreen from '../views/GameScreen';
-import ScoreScreen from '../views/ScoreScreen';
-import HomeScreen from '../views/HomeScreen';
+import { createStackNavigator } from '@react-navigation/stack';
+import HomeScreen from '../screens/HomeScreen';
+import GameScreen from '../screens/GameScreen';
+import ScoreScreen from '../screens/ScoreScreen';
 
 const Stack = createStackNavigator();
 
-const AppNavigator: React.FC = () => {
+const AppNav = () => {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Game" component={GameScreen} />
-        <Stack.Screen name="Home" component={HomeScreen} />
-
-        <Stack.Screen name="Scores" component={ScoreScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Home">
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="Game" component={GameScreen} />
+          <Stack.Screen name="Score" component={ScoreScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+  
   );
 };
 
-export default AppNavigator;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: '100%', 
+    height: '100%', 
+  },
+});
+
+
+export default () => {
+  return (
+    <View style={styles.container}>
+      <AppNav />
+    </View>
+  );
+};

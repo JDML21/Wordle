@@ -1,14 +1,23 @@
-import React from 'react';
-import { AppProvider } from './src/context/AppContext';
-import GameScreen from './src/views/GameScreen';
-import AppNavigator from './src/navigation/navigation';
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import { GameProvider } from "./src/context/GameContext";
+import AppNav from "./src/navigation/Navigation";
 
-const App = () => {
+export default function App() {
   return (
-    <AppProvider>
-      <AppNavigator/>
-    </AppProvider>
+    <GameProvider>
+      <View style={styles.container}>
+        <AppNav/>
+      </View>
+    </GameProvider>
   );
 }
 
-export default App;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#000000",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});
